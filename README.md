@@ -23,6 +23,13 @@ To put on a page, put this code snippet JUST BEFORE the `</body>` tag.
 <script src="/path/to/js/utm-passer.min.js"></script>
 ```
 
+I usually uglify this code too before I release it, just so all the comments and stuff don't go out
+```
+uglifyjs --compress --mangle -- utm-passer.js >> utm-passer.min.js
+```
+
+And then release that.
+
 Contact
 -----------
 

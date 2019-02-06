@@ -7,7 +7,9 @@ If you're a google analytics user, there are times when you end up in the follow
 Site A.com ---> Site B.com ---> conversion on B
 ```
 
-The problem is that if you want to track conversion by source, site B has no idea about the origin of the traffic to site A unless you pass it a `utm_source` code. Once you do that, Google Analytics should take it from there. This library when installed on a page will enforce that the following three variables: `utm_source`, `utm_medium`, and `utm_campaign` get passed to any other link on that page.
+The problem is that if you want to track conversion by source, site B has no idea about the origin of the traffic to site A unless you pass it a `utm_source` code. Once you do that, Google Analytics should take it from there. This library when installed on all pages on site A will enforce that the following three variables: `utm_source`, `utm_medium`, and `utm_campaign` get passed to any other link on that page. This way, if you link to B from site A, the right parameters will be passed over.
+
+This only works for `GET` requests. 
 
 It should respect url in most common formats, although if you use this and find something broken submit an issue on here so I can take a look.
 

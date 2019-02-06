@@ -64,7 +64,7 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     // we may remove this, just testing to see hashbang issues
     const isHashbang = (hrefpath.indexOf('#') == -1)
 
-    if (hrefpath && hrefpath != "") {
+    if (hrefpath && hrefpath != "" && hrefpath != "#") {
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)
       if (hrefpath.indexOf('?') > 0) {
         path = hrefpath.substring(0, hrefpath.indexOf('?'))

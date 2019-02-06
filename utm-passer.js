@@ -29,7 +29,7 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 function getUrlParams(url) {
-  let params = {};
+  let params = {}
   let url_path = url
 
   if (!url_path) {

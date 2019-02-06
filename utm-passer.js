@@ -38,16 +38,14 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_c) { params['utm_campaign'] = utm_c }
 
     if (hrefpath && hrefpath != "") {
-      console.log(hrefpath)
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)
       if (hrefpath.indexOf('?') > 0) {
         path = hrefpath.substring(0, hrefpath.indexOf('?'))
       }
 
+      // hbpath is the hashbang paths like index.php#fizzbuzz
       let hbpath = ""
-      console.log(hrefpath.indexOf('#'))
       if (hrefpath.indexOf('#') > 0) {
-        console.log('booyah')
         hbpath = hrefpath.substring(hrefpath.indexOf('#'))
       }
 

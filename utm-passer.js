@@ -61,19 +61,25 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_m) { params['utm_medium'] = utm_m }
     if (utm_c) { params['utm_campaign'] = utm_c }
 
-    // we may remove this, just testing to see hashbang issues
-    const isHashbang = (hrefpath.indexOf('#') == -1)
-
-    if (hrefpath && hrefpath != "" && hrefpath[0] != "#") {
+    if (hrefpath && hrefpath != "") {
+      console.log(hrefpath)
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)
       if (hrefpath.indexOf('?') > 0) {
         path = hrefpath.substring(0, hrefpath.indexOf('?'))
       }
+
+      let hbpath = ""
+      console.log(hrefpath.indexOf('#'))
+      if (hrefpath.indexOf('#') > 0) {
+        console.log('booyah')
+        hbpath = hrefpath.substring(hrefpath.indexOf('#'))
+      }
+
       // encode the params as data and then url encode them 
       let data = Object.entries(params)
       data = data.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
       let query = data.join('&');
-      links[i].href = path + "?" + query
+      links[i].href = path + "?" + query + hbpath
     }
   }
 }

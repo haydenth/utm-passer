@@ -1,32 +1,8 @@
 /*
-  this code does a few things
-    1) looks to see if there are utm params either in url OR in cookies
-    2) if so, store them in cookies
-    3) if so, append utm_source, utm_campaign, and utm_medium to outgoing links
+  this code does two things and nothing else
+    1) looks to see if there are utm params in url 
+    2) if so, append utm_source, utm_campaign, and utm_medium to outgoing links
 */
-
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 
 function getUrlParams(url) {
   let params = {}

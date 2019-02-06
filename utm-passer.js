@@ -61,6 +61,9 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_m) { params['utm_medium'] = utm_m }
     if (utm_c) { params['utm_campaign'] = utm_c }
 
+    // we may remove this, just testing to see hashbang issues
+    const isHashbang = (hrefpath.indexOf('#') == -1)
+
     if (hrefpath && hrefpath != "") {
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)
       if (hrefpath.indexOf('?') > 0) {

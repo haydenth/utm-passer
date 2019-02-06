@@ -10,6 +10,6 @@ Installation
 This is currently being hosted on a CDN (thanks to the release script). To put on a page, put this code snippet JUST BEFORE the `</body>` tag.
 
 ```
-<script src="http://cdn.hngr.co/js/utm-passer.min.js"></script>
+<script src="https://cdn.hngr.co/js/utm-passer.min.js"></script>
 ```
 

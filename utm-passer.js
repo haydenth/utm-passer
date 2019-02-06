@@ -61,7 +61,7 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_m) { params['utm_medium'] = utm_m }
     if (utm_c) { params['utm_campaign'] = utm_c }
 
-    if (hrefpath) {
+    if (hrefpath && hrefpath != "") {
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)
       if (hrefpath.indexOf('?') > 0) {
         path = hrefpath.substring(0, hrefpath.indexOf('?'))

@@ -14,6 +14,17 @@ This only works for `GET` requests. Also this doesn't do anything sophsticated t
 It should respect url in most common formats, although if you use this and find something broken submit an issue on here so I can take a look.
 
 
+URLs You Don't Want UTMs On
+-------------------
+Sometimes there are URLs where you don't want to append a utm value or parameter of any kind because it will screw up some existing javascript. This happens if you have ajax buttons or something. If this is the case, just add the `no-utm` attribute to the URL, like this:
+
+```
+<a href='asdf' no-utm>link with NEVER a UTM</a>
+```
+
+In this case, the library will be smart enough to not jam UTMs through.
+
+
 Installation
 ------------
 

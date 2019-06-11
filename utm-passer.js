@@ -37,7 +37,10 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_m) { params['utm_medium'] = utm_m }
     if (utm_c) { params['utm_campaign'] = utm_c }
 
-    let skipPassing = (links[i].getAttribute('no-utm') !== null)
+    let skipPassing = true
+    if (typeof links[i].getAttribute !== "undefined") {
+      skipPassing = (links[i].getAttribute('no-utm') !== null)
+    } 
 
     if (skipPassing === false && hrefpath && hrefpath != "") {
       let path = hrefpath.substring(hrefpath.indexOf('?')+1)

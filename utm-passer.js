@@ -73,5 +73,6 @@ async function utmOverwrite() {
   }
 };
 
+// on document content loaded, function
+document.addEventListener("DOMContentLoaded", utmOverwrite)
 
-utmOverwrite()

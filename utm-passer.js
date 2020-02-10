@@ -28,7 +28,7 @@ function getUrlParam(p) {
 /* this function overwrites all outgoing links on the site
    AND internal links on the site to pass the same utm 
    codes around */
-function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
+function overwriteOutgoingLinks(utm_s, utm_m, utm_c, utm_t, utm_term) {
   const links = document.getElementsByTagName('a')
   for(let i in links) {
     let hrefpath = links[i].href
@@ -36,6 +36,8 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c) {
     if (utm_s) { params['utm_source'] = utm_s }
     if (utm_m) { params['utm_medium'] = utm_m }
     if (utm_c) { params['utm_campaign'] = utm_c }
+    if (utm_t) { params['utm_content'] = utm_t }
+    if (utm_term) { params['utm_term'] = utm_term }
 
     let skipPassing = true
     if (typeof links[i].getAttribute !== "undefined") {
@@ -67,9 +69,12 @@ async function utmOverwrite() {
   const utm_ps = getUrlParam('utm_source')
   const utm_pm = getUrlParam('utm_medium')
   const utm_pc = getUrlParam('utm_campaign')
-  if (utm_ps || utm_pm || utm_pc) {
+  const utm_ct = getUrlParam('utm_content')
+  const utm_tt = getUrlPeram('utm_term')
+
+  if (utm_ps || utm_pm || utm_pc || utm_ct) {
     console.log('utm-passer: overwriting outbound links...')
-    overwriteOutgoingLinks(utm_ps, utm_pm, utm_pc)
+    overwriteOutgoingLinks(utm_ps, utm_pm, utm_pc, utm_ct, utm_tt)
   }
 };
 

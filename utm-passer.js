@@ -70,9 +70,9 @@ async function utmOverwrite() {
   const utm_pm = getUrlParam('utm_medium')
   const utm_pc = getUrlParam('utm_campaign')
   const utm_ct = getUrlParam('utm_content')
-  const utm_tt = getUrlPeram('utm_term')
+  const utm_tt = getUrlParam('utm_term')
 
-  if (utm_ps || utm_pm || utm_pc || utm_ct) {
+  if (utm_ps || utm_pm || utm_pc || utm_ct || utm_tt) {
     console.log('utm-passer: overwriting outbound links...')
     overwriteOutgoingLinks(utm_ps, utm_pm, utm_pc, utm_ct, utm_tt)
   }

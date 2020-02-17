@@ -76,8 +76,9 @@ async function utmOverwrite() {
     console.log('utm-passer: overwriting outbound links...')
     overwriteOutgoingLinks(utm_ps, utm_pm, utm_pc, utm_ct, utm_tt)
   }
-};
+}
 
-// on document content loaded, function
+// on document content loaded, function also attempt
+// to aggressively overwrite any link on a click
 document.addEventListener("DOMContentLoaded", utmOverwrite)
-
+document.addEventListener("click", utmOverwrite)

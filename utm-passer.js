@@ -82,3 +82,9 @@ async function utmOverwrite() {
 // to aggressively overwrite any link on a click
 document.addEventListener("DOMContentLoaded", utmOverwrite)
 document.addEventListener("click", utmOverwrite)
+
+// also do this after a few seconds just to make sure
+// things dont show up on animations, delays, etc
+document.addEventListener("click", function(){ 
+  setTimeout(utmOverwrite, 1500) 
+})

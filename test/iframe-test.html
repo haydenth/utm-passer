@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>UTM Passer - Iframe Test</title>
+  </head>
+  <body>
+    <h1>UTM Passer - Iframe Test</h1>
+    <p>This page tests UTM parameter passing to iframes.</p>
+    <p>Visit this page with UTM parameters like: <code>iframe-test.html?utm_source=google&utm_medium=cpc&utm_campaign=test</code></p>
+
+    <h2>Regular Links (should get UTMs)</h2>
+    <a href='link2.html'>Internal link</a><br>
+    <a href='http://www.example.com'>External link</a><br>
+
+    <h2>Iframes (should get UTMs)</h2>
+    <iframe src="https://example.com" width="600" height="400" frameborder="1"></iframe><br><br>
+    <iframe src="link2.html" width="600" height="200" frameborder="1"></iframe><br><br>
+    
+    <h2>Iframe with existing parameters (should preserve and add UTMs)</h2>
+    <iframe src="https://example.com?existing=param&other=value" width="600" height="200" frameborder="1"></iframe><br><br>
+
+    <h2>Iframe with no-utm attribute (should NOT get UTMs)</h2>
+    <iframe src="https://example.com" width="600" height="200" frameborder="1" no-utm></iframe><br><br>
+
+    <h2>Links with no-utm attribute (should NOT get UTMs)</h2>
+    <a href='http://www.example.com' no-utm>External link without UTMs</a><br>
+
+    <script>
+      // Log current URL to see UTM parameters
+      console.log('Current URL:', window.location.href);
+    </script>
+    <script src="../utm-passer.js"></script>
+  </body>
+</html>

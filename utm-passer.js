@@ -1,7 +1,8 @@
 /*
-  this code does two things and nothing else
+  this code does three things and nothing else
     1) looks to see if there are utm params in url 
     2) if so, append utm_source, utm_campaign, and utm_medium to outgoing links
+    3) also append utm parameters to iframe src URLs
 */
 
 function getUrlParams(url) {
@@ -65,6 +66,61 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c, utm_t, utm_term) {
   }
 }
 
+/* this function overwrites all iframe src URLs on the site
+   to pass the same utm codes around */
+function overwriteIframeSrcs(utm_s, utm_m, utm_c, utm_t, utm_term) {
+  const iframes = document.getElementsByTagName('iframe')
+  for(let i = 0; i < iframes.length; i++) {
+    let srcpath = iframes[i].src
+    
+    // Skip if no src or if it has the no-utm attribute
+    let skipPassing = false
+    if (typeof iframes[i].getAttribute !== "undefined") {
+      skipPassing = (iframes[i].getAttribute('no-utm') !== null)
+    }
+    
+    if (skipPassing || !srcpath || srcpath === "") {
+      continue
+    }
+    
+    // Skip data URLs, blob URLs, and relative URLs without protocols
+    if (srcpath.startsWith('data:') || srcpath.startsWith('blob:') || 
+        (!srcpath.includes('://') && !srcpath.startsWith('//'))) {
+      continue
+    }
+    
+    let params = getUrlParams(srcpath)
+    if (utm_s) { params['utm_source'] = utm_s }
+    if (utm_m) { params['utm_medium'] = utm_m }
+    if (utm_c) { params['utm_campaign'] = utm_c }
+    if (utm_t) { params['utm_content'] = utm_t }
+    if (utm_term) { params['utm_term'] = utm_term }
+
+    let path = srcpath
+    if (srcpath.indexOf('?') > 0) {
+      path = srcpath.substring(0, srcpath.indexOf('?'))
+    }
+
+    // hbpath is the hashbang paths like index.php#fizzbuzz
+    let hbpath = ""
+    if (srcpath.indexOf('#') > 0) {
+      hbpath = srcpath.substring(srcpath.indexOf('#'))
+      // Remove hash from path if it exists
+      if (path.indexOf('#') > 0) {
+        path = path.substring(0, path.indexOf('#'))
+      }
+    }
+
+    // encode the params as data and then url encode them 
+    let data = Object.entries(params)
+    data = data.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    let query = data.join('&')
+    
+    const newSrc = path + "?" + query + hbpath
+    iframes[i].src = newSrc
+  }
+}
+
 async function utmOverwrite() {
   const utm_ps = getUrlParam('utm_source')
   const utm_pm = getUrlParam('utm_medium')
@@ -73,8 +129,9 @@ async function utmOverwrite() {
   const utm_tt = getUrlParam('utm_term')
 
   if (utm_ps || utm_pm || utm_pc || utm_ct || utm_tt) {
-    console.log('utm-passer: overwriting outbound links...')
+    console.log('utm-passer: overwriting outbound links and iframes...')
     overwriteOutgoingLinks(utm_ps, utm_pm, utm_pc, utm_ct, utm_tt)
+    overwriteIframeSrcs(utm_ps, utm_pm, utm_pc, utm_ct, utm_tt)
   }
 }
 

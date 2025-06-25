@@ -32,6 +32,12 @@ function getUrlParam(p) {
 function overwriteOutgoingLinks(utm_s, utm_m, utm_c, utm_t, utm_term) {
   const links = document.getElementsByTagName('a')
   for(let i in links) {
+    // Skip if already processed (marked with data attribute)
+    if (typeof links[i].getAttribute !== "undefined" && 
+        links[i].getAttribute('data-utm-processed') === 'true') {
+      continue
+    }
+    
     let hrefpath = links[i].href
     let params = getUrlParams(hrefpath)
     if (utm_s) { params['utm_source'] = utm_s }
@@ -63,6 +69,11 @@ function overwriteOutgoingLinks(utm_s, utm_m, utm_c, utm_t, utm_term) {
       let query = data.join('&');
       links[i].href = path + "?" + query + hbpath
     }
+    
+    // Mark as processed to prevent reprocessing
+    if (typeof links[i].setAttribute !== "undefined") {
+      links[i].setAttribute('data-utm-processed', 'true')
+    }
   }
 }
 
@@ -73,6 +84,11 @@ function overwriteIframeSrcs(utm_s, utm_m, utm_c, utm_t, utm_term) {
   for(let i = 0; i < iframes.length; i++) {
     let srcpath = iframes[i].src
     
+    // Skip if already processed (marked with data attribute)
+    if (iframes[i].getAttribute('data-utm-processed') === 'true') {
+      continue
+    }
+    
     // Skip if no src or if it has the no-utm attribute
     let skipPassing = false
     if (typeof iframes[i].getAttribute !== "undefined") {
@@ -80,12 +96,15 @@ function overwriteIframeSrcs(utm_s, utm_m, utm_c, utm_t, utm_term) {
     }
     
     if (skipPassing || !srcpath || srcpath === "") {
+      // Mark as processed even if skipped to avoid reprocessing
+      iframes[i].setAttribute('data-utm-processed', 'true')
       continue
     }
     
     // Skip data URLs, blob URLs, and relative URLs without protocols
     if (srcpath.startsWith('data:') || srcpath.startsWith('blob:') || 
         (!srcpath.includes('://') && !srcpath.startsWith('//'))) {
+      iframes[i].setAttribute('data-utm-processed', 'true')
       continue
     }
     
@@ -118,6 +137,9 @@ function overwriteIframeSrcs(utm_s, utm_m, utm_c, utm_t, utm_term) {
     
     const newSrc = path + "?" + query + hbpath
     iframes[i].src = newSrc
+    
+    // Mark as processed to prevent reprocessing
+    iframes[i].setAttribute('data-utm-processed', 'true')
   }
 }
 
@@ -135,13 +157,47 @@ async function utmOverwrite() {
   }
 }
 
-// on document content loaded, function also attempt
-// to aggressively overwrite any link on a click
+// Initialize UTM processing when DOM is ready
 document.addEventListener("DOMContentLoaded", utmOverwrite)
-document.addEventListener("click", utmOverwrite)
 
-// also do this after a few seconds just to make sure
-// things dont show up on animations, delays, etc
-document.addEventListener("click", function(){ 
-  setTimeout(utmOverwrite, 1500) 
-})
+// For dynamically added content, use a MutationObserver instead of click events
+// This prevents constant reprocessing and iframe reloading
+if (typeof MutationObserver !== 'undefined') {
+  const observer = new MutationObserver(function(mutations) {
+    let shouldReprocess = false
+    mutations.forEach(function(mutation) {
+      // Only reprocess if new nodes with links or iframes are added
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        for (let node of mutation.addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'A' || node.tagName === 'IFRAME' ||
+                node.querySelector('a') || node.querySelector('iframe')) {
+              shouldReprocess = true
+              break
+            }
+          }
+        }
+      }
+    })
+    
+    if (shouldReprocess) {
+      utmOverwrite()
+    }
+  })
+  
+  // Start observing after DOM is loaded
+  document.addEventListener("DOMContentLoaded", function() {
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    })
+  })
+} else {
+  // Fallback for older browsers - but only on link clicks, not all clicks
+  document.addEventListener("click", function(event) {
+    // Only reprocess if the clicked element is a link that might have been dynamically added
+    if (event.target.tagName === 'A' && !event.target.getAttribute('data-utm-processed')) {
+      utmOverwrite()
+    }
+  })
+}
